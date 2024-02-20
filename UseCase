@@ -1,0 +1,85 @@
+Use Case
+for
+<stripe>
+Version 1.0 approved
+Prepared by <Farzaneh saeidi>
+<2/202024>
+Farzane saeidi	2/20		1.0
+
+
+Use-case name: balance
+  Brief Description:
+       STRIPE is a company that prepare APIs, platforms,. Stripe is a payment service provider that lets merchants accept credit and debit cards or other payments. Its payment processing solution, Stripe Payments, is best suited for businesses that make most of their sales online, as most of its unique features are primarily geared toward online sales.
+       Our goal is developing one of the web services in this doc. we intend to see how this method works. 
+Workers:stripe
+Actors: endusers
+Pre-Condition:
+      -valid account
+      -valid token
+     -authorization in API with specific username and password. 
+Post-Condition:-
+main flow:
+      1.api: {{url}}/v1/balance   This is an object representing your Stripe balance. You can retrieve it to see the balance currently on your Stripe account.
+        You can also retrieve the balance history, which contains a list of transactions that contributed to the balance (charges, payouts, and so forth).
+        The available and pending amounts for each currency are broken down further by payment source types.
+        this API just for informing users about account balance in their account to charge it,pay it,..
+
+            method:GET
+            Token:basic Auth
+
+      
+
+request:
+ Parameters:-
+
+| Headers                      | Type          | Required | Description                                         |
+|------------------------------|---------------|----------|-----------------------------------------------------|
+| `Stripe-Account`             | string        | no      |{{CONNECTED_ACCOUNT_ID}}                             |
+
+
+   response:
+| Attribute                   | Type                         | Description                                         |
+|------------------------------|-------------------------   |-----------------------------------------------------|
+| `object`                     | string                     | String representing the object’s type. Objects of the same type share the same value..                                 |
+| `available`                  | array of objects           | Available funds that you can transfer or pay out automatically by Stripe or explicitly through the Transfers API or Payouts API. You can find the available balance for each currency and payment type in the source_types property. |
+| `connect_reserved`           | boolean                    | Funds held due to negative balances on connected Custom accounts. You can find the connect reserve balance for each currency and payment type in the source_types property|
+| `instant_available`          | nullable array of objects  | Funds that you can pay out using Instant Payouts..                                 |
+| `livemode`                   | boolean                    | Has the value true if the object exists in live mode or the value false if the object exists in test mode. |
+| `pending`                    | array of objects          | Funds that aren’t available in the balance yet. You can find the pending balance for each currency and each payment type in the source_types property.| 
+| `issuing`                    | nullable object            | Funds that you can spend on your Issued Cards. |
+
+
+pending Objects:
+| Attribute                    | Type           | Description                                         |
+|------------------------------|---------------|----------|-----------------------------------------------------|
+| `pending.amount`              | integer       | Title of the issue.                                 |
+| `pending.currency`            | enum           | IDs of the users to assign the issue to. Ultimate only. |
+| `pending.source_types`        | nullable object | amount for card,deposit |
+
+avilable Objects:
+| Attribute                    | Type           | Description                                         |
+|------------------------------|---------------|----------|-----------------------------------------------------|
+| `availbale.amount`              | integer     | ...                                 |
+| `avilbale.currency`            | enum          |  |
+
+
+
+
+business rules:
+
+        1. All Stripe accounts can have balances in two states:
+               pending, meaning the funds are not yet available to pay out.
+               available, meaning the funds can be paid out now.
+        2.every account has their own balance.
+        3.a platform account can also have a connect_reserved balance, used to offset negative balances on connected accounts.
+        4.connect_reserved is for connect.
+
+
+Extension Point:
+we can add 2 fields for filtering better:
+  key,keyId
+ key can be filled with card,accountNumber,userId,..
+keyId is a value of key
+for ex: key:userId   keyId:234
+so in the result just show the amount of this user that decrease traffic,..and optimize the request because majority of people just want to know specific thing per time
+but if they intend to see all source types they use current request.
