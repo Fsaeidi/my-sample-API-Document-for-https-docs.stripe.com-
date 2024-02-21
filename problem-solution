@@ -3,7 +3,7 @@ dentified problems:
 in balance API needs to determine a mandatory field in request.
 if it worked with token,it would dedicat an exact property.
 I mean sometime people have accsses to other`s token
-and I belive should be better with a field(like?userid,accountId or email)without them we need to check lots of things 
+and I belive should be better with a field(like:userid,accountId or email).without them we need to check lots of things 
 and serve them that are not not resonable.
 
 
