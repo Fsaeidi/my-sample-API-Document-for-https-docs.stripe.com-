@@ -34,7 +34,7 @@ request:
 
 | Headers                      | Type          | Required | Description                                         |
 |------------------------------|---------------|----------|-----------------------------------------------------|
-| `Stripe-Account`             | string        | no      |{{CONNECTED_ACCOUNT_ID}}                             |
+| `Stripe-Account`             | string        | should be     |{{CONNECTED_ACCOUNT_ID}}                             |
 
 
    response:
@@ -45,22 +45,22 @@ request:
 | `connect_reserved`           | boolean                    | Funds held due to negative balances on connected Custom accounts. You can find the connect reserve balance for each currency and payment type in the source_types property|
 | `instant_available`          | nullable array of objects  | Funds that you can pay out using Instant Payouts..                                 |
 | `livemode`                   | boolean                    | Has the value true if the object exists in live mode or the value false if the object exists in test mode. |
-| `pending`                    | array of objects          | Funds that aren’t available in the balance yet. You can find the pending balance for each currency and each payment type in the source_types property.| 
+| `pending`                    | array of objects           | Funds that aren’t available in the balance yet. You can find the pending balance for each currency and each payment type in the source_types property.| 
 | `issuing`                    | nullable object            | Funds that you can spend on your Issued Cards. |
 
 
 pending Objects:
 | Attribute                    | Type           | Description                                         |
 |------------------------------|---------------|----------|-----------------------------------------------------|
-| `pending.amount`              | integer       | Title of the issue.                                 |
+| `pending.amount`              | integer       | ..                               |
 | `pending.currency`            | enum           | IDs of the users to assign the issue to. Ultimate only. |
 | `pending.source_types`        | nullable object | amount for card,deposit |
 
 avilable Objects:
 | Attribute                    | Type           | Description                                         |
 |------------------------------|---------------|----------|-----------------------------------------------------|
-| `availbale.amount`              | integer     | ...                                 |
-| `avilbale.currency`            | enum          |  |
+| `availbale.amount`            | integer       | ...                                 |
+| `avilbale.currency`           | enum          |  |
 
 
 
@@ -73,6 +73,9 @@ business rules:
         2.every account has their own balance.
         3.a platform account can also have a connect_reserved balance, used to offset negative balances on connected accounts.
         4.connect_reserved is for connect.
+       5.If a connected account balance is negative, Stripe debits their external account on file up to the maximum number of attempts allowed.
+        If all attempts fail, Stripe pauses payouts to and debits from the external account until the external account on file is updated.
+        6.accountId is unique.
 
 
 Extension Point:
@@ -83,3 +86,4 @@ keyId is a value of key
 for ex: key:userId   keyId:234
 so in the result just show the amount of this user that decrease traffic,..and optimize the request because majority of people just want to know specific thing per time
 but if they intend to see all source types they use current request.
+
